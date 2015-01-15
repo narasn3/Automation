@@ -1,0 +1,227 @@
+
+$QuoteSearchResults-icon-boottom-color: #1776F8;
+$QuoteSearchResults-icon-top-color: #7DECFF;
+$QuoteSearchResults-icon-bg-color-pressed: #157efb;
+
+$QuoteSearchResults-resize-factor-landscape: 0.7;
+$QuoteSearchResults-resize-factor-landscape-iPhone4: 0.6;
+
+$QuoteSearchResults-icon-font-size: 8.3em;
+$QuoteSearchResults-arrow-font-size: 4em;
+$QuoteSearchResults-icon-rounded-container-width: 8em;
+$QuoteSearchResults-icon-rounded-container-height: 8em;
+$QuoteSearchResults-icon-rounded-container-border-radius: 1.1em;
+$QuoteSearchResults-desc-rounded-container-border-radius: 0.5em;
+
+/**
+ * Search Quote Mixins
+ */
+@mixin process-icon-bg-rounded {
+    -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.2);
+    background-image: -webkit-linear-gradient(bottom, $QuoteSearchResults-icon-boottom-color, $QuoteSearchResults-icon-top-color);
+    background-image: -moz-linear-gradient(bottom, $QuoteSearchResults-icon-boottom-color, $QuoteSearchResults-icon-top-color);
+    background-image: -o-linear-gradient(bottom, $QuoteSearchResults-icon-boottom-color, $QuoteSearchResults-icon-top-color);
+    background-image: -ms-linear-gradient(bottom, $QuoteSearchResults-icon-boottom-color, $QuoteSearchResults-icon-top-color);
+    width: $QuoteSearchResults-icon-rounded-container-width;
+    height: $QuoteSearchResults-icon-rounded-container-height;
+    border-radius: $QuoteSearchResults-icon-rounded-container-border-radius;
+    
+    &.pressed { 
+        background-color: $QuoteSearchResults-icon-bg-color-pressed;
+    }
+}
+
+/**
+ * Includes an icon to be used on quote results data view. The $name is the color of the process.
+ *
+ *     @include process-icon('green','check_black2','green');
+ *
+ * @param {string} $name The name of the icon to be included.
+ * @param {string} $character-name The character name to retrieve character for it
+ * @param {string} $font-color The `color` used for this icon. Defaults to `grey`
+ * @param {string} $font-size The `font-size` used for this icon. Defaults to `10em`.
+ * @param {string} $character The `character` to be used for this icon. Defaults to null so you can use character-name mapping
+ */
+@mixin process-icon($name, $character-name: null, $font-color: none, $font-size: $QuoteSearchResults-icon-font-size, $font-family:'Pictos', $character: null) {
+
+    @if $character == null {
+        $character: icon-character-for-name($character-name);
+    }
+
+    @if $character == null {
+        @debug "#icon: icon with name '#{$name}' not found.";
+    }
+
+    @if $character != null {
+        &.#{$name} {
+            &:before {
+                text-align: center;
+
+                @if $font-family != null {
+                    font-family: $font-family;
+                }
+
+                @if $character != null {
+                    content: "#{$character}";
+                }
+                font-size: $font-size;
+                @if $font-color != none {
+                        color: $font-color;
+                }
+                margin: 0;
+                padding: 0;
+                line-height: 0.92em;
+            }
+        }
+    }
+}
+
+@mixin rel-position($left: 0em, $top: 0em) {
+    position: relative;
+    left: $left;
+    top: $top;
+}
+
+@mixin icon-position ($left: 0.05em, $top: 0.05em) {
+    @include rel-position($left, $top);
+}
+
+@mixin rectangle($color: grey, $size: 2em) {
+        height: $size;
+        background: $color;
+        position: relative;
+}
+
+@mixin triangle-right($color: grey, $size: 4em) {
+	width: 0;
+	height: 0;
+	border-top: $size/2 solid transparent;
+	border-left: $size solid $color;
+	border-bottom: $size/2 solid transparent;
+        position: relative;
+}
+
+@mixin arrow($color: grey, $size: 4em) {
+    .arrow-but-#{$color} {
+        @include rectangle($color, $size/2);
+    }
+    .arrow-#{$color} {
+        @include triangle-right($color,$size);
+    }
+}
+
+@mixin display-flex($direction: row, $justify: center, $valign: flex-start) {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    //-webkit-box-direction: normal;
+    //-moz-box-direction: normal;
+    
+    // we need that for safari
+    @if ($direction == row) {
+        -webkit-box-orient: horizontal;
+    }
+    @else if ($direction == column) {
+        -webkit-box-orient: vertical;
+    }
+        
+    //-moz-box-orient: horizontal;
+    -webkit-flex-direction: $direction;
+    -ms-flex-direction: $direction;
+    flex-direction: $direction;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-box-pack: $justify;
+    -moz-box-pack: $justify;
+    -webkit-justify-content: $justify;
+    -ms-flex-pack: $justify;
+    justify-content: $justify;
+    -webkit-align-content: $valign;
+    -ms-flex-line-pack: $valign;
+    align-content: $valign;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+
+/**
+ * Styles specific to data view results items for employee view
+ */
+.quote-results-item-relative {
+    padding: 1em;
+    border-bottom: 1px solid #ccc;
+    section {
+        font-size: 0.8em;
+      
+        &.top {
+            span {
+                &.quote {
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+    .steps-container {
+        width: 100%;
+        @include display-flex(row, center);
+        .step-container {
+            @include display-flex(row, flex-start);
+            &:nth-child(1) {
+                width: 38%;
+                    
+            }
+            &:nth-child(2) {
+                width: 38%;
+               
+            }
+            &:nth-child(3) {
+                width: 10%;
+               
+            }
+            .icon-container {
+                @include display-flex(column, center);
+               
+                .desc-container {
+                    margin-top: 0.1em;
+                    min-height: 4em;
+                    div {
+                        font-size: 0.8em;
+                        &.desc {
+                            width: 100%;
+                            text-align: center;
+                           
+                            &:nth-child(1) {
+                                color: rgb(255, 253, 253);
+                                text-shadow: -.1em .1em rgb(0, 0, 0);
+                                letter-spacing: 0.1em;
+                                -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.2);
+                                -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.2);
+                                box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.2);
+                                border-radius: $QuoteSearchResults-desc-rounded-container-border-radius;
+                                background-color: grey;
+                            }
+                        }
+                    }
+                }
+            }
+            .arrow-container {
+                width: 80%;
+                position: relative;
+                top: -2em;
+                height: 5em;
+               
+               
+                
+            }
+        }
+    }
+}
+
